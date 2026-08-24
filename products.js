@@ -1,6 +1,6 @@
 /* RAW CULT — catálogo V1.1 */
 
-const RAWCULT_PRODUCTS = Object.freeze([
+window.RAWCULT_PRODUCTS = Object.freeze([
   {
     id: 'eternal-skull-tee',
     name: 'ETERNAL SKULL TEE',
