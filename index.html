@@ -1,95 +1,198 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RAW CULT — Drops Limitados</title>
-    <meta name="description" content="Raw Cult: streetwear para apasionados del anime, rock y fitness. Drops limitados, calidad algodón reactivo." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="color-scheme" content="dark" />
 
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-    <meta name="msapplication-TileColor" content="#0a0a0a">
-    <meta name="theme-color" content="#0a0a0a">
-    <!-- Tipografías de Google (gratuitas) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&display=swap" rel="stylesheet" />
+  <title>RAW CULT — DROP 001 ETERNAL</title>
+  <meta name="description" content="RAW CULT — streetwear, objetos y drops limitados. DROP 001: ETERNAL. Hecho en Perú." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://rawcult.pe/" />
 
-    <!-- Conectar con el archivo de estilos -->
-    <link rel="stylesheet" href="style.css" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="RAW CULT — DROP 001 ETERNAL" />
+  <meta property="og:description" content="Limited drops. Unfiltered culture. Hecho en Perú." />
+  <meta property="og:site_name" content="RAW CULT" />
+
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Barra de navegación superior -->
-    <header class="nav">
-        <div class="logo">RAW<span>CULT</span></div>
-        <nav class="social-links">
-            <a href="#" target="_blank" rel="noopener" data-social="instagram" aria-label="Instagram">IG</a>
-            <a href="#" target="_blank" rel="noopener" data-social="tiktok" aria-label="TikTok">TT</a>
-        </nav>
-    </header>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
 
-    <!-- Sección principal con countdown -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">DROP<br><span>001</span></h1>
-            <p class="hero-subtitle" id="drop-name">CARGANDO...</p>
+  <header class="site-header" id="top">
+    <a class="brand-mark" href="#top" aria-label="RAW CULT inicio">RAW<span>CULT</span></a>
 
-            <div class="countdown" id="countdown">
-                <div class="count-unit">
-                    <span class="count-number" id="days">00</span>
-                    <span class="count-label">DÍAS</span>
-                </div>
-                <div class="count-unit">
-                    <span class="count-number" id="hours">00</span>
-                    <span class="count-label">HRS</span>
-                </div>
-                <div class="count-unit">
-                    <span class="count-number" id="minutes">00</span>
-                    <span class="count-label">MIN</span>
-                </div>
-                <div class="count-unit">
-                    <span class="count-number" id="seconds">00</span>
-                    <span class="count-label">SEG</span>
-                </div>
-            </div>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#drop">DROP</a>
+      <a href="#shop">SHOP</a>
+      <a href="#archive">ARCHIVE</a>
+      <a href="#about">ABOUT</a>
+    </nav>
 
-            <a href="#" class="cta-button" id="cta-link" target="_blank" rel="noopener">AVISARME EN INSTAGRAM</a>
+    <button class="cart-button" id="cart-toggle" type="button" aria-controls="cart-panel" aria-expanded="false">
+      CART <span id="cart-count" aria-live="polite">0</span>
+    </button>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid"></div>
+      <div class="hero-noise" aria-hidden="true"></div>
+
+      <div class="hero-content shell">
+        <p class="eyebrow">RAW CULT / MADE IN PERÚ</p>
+        <h1 id="hero-title">DROP <span>001</span></h1>
+        <p class="hero-name" id="hero-drop-name">ETERNAL</p>
+        <p class="hero-copy">Unfiltered culture.<br />Limited by design.</p>
+
+        <div class="countdown" id="countdown" aria-label="Cuenta regresiva para el drop">
+          <div><strong id="days">00</strong><span>DÍAS</span></div>
+          <div><strong id="hours">00</strong><span>HRS</span></div>
+          <div><strong id="minutes">00</strong><span>MIN</span></div>
+          <div><strong id="seconds">00</strong><span>SEG</span></div>
         </div>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#shop" id="hero-cta">ENTRAR AL DROP</a>
+          <a class="button button-ghost" href="#about">CONOCER RAW CULT</a>
+        </div>
+
+        <p class="hero-status" id="drop-status">DROP PROGRAMADO</p>
+      </div>
     </section>
 
-    <!-- Sección del pedestal con prenda destacada -->
-    <section class="pedestal-section">
-        <div class="pedestal-bg">
-            <video id="bg-video" autoplay muted loop playsinline preload="metadata"></video>
-            <div class="video-overlay"></div>
+    <section class="drop-section shell" id="drop" aria-labelledby="drop-title">
+      <div class="section-heading">
+        <p class="eyebrow">01 / THE DROP</p>
+        <h2 id="drop-title">ETERNAL</h2>
+        <p>Una cápsula breve. Una identidad fuerte. Sin restock automático.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-media">
+          <img id="featured-image" src="images/drop001-tee.png" alt="ETERNAL SKULL TEE de RAW CULT" loading="eager" />
+          <span class="media-tag">DROP 001</span>
         </div>
 
-        <div class="pedestal-content">
-            <h2 class="pedestal-title">MÁS<br>DESEADA</h2>
-            <div class="pedestal-product">
-                <img src="images/drop001-tee.png" alt="Prenda destacada del drop" id="product-img" loading="lazy" />
-                <div class="pedestal-base"></div>
-            </div>
-            <p class="pedestal-text">Solo quedan <span id="stock-left">--</span> unidades del drop anterior.</p>
+        <div class="feature-copy">
+          <p class="feature-kicker">LIMITED RELEASE</p>
+          <h3 id="featured-name">ETERNAL SKULL TEE</h3>
+          <p class="feature-description" id="featured-description"></p>
+          <div class="feature-meta">
+            <div><span>PRECIO</span><strong id="featured-price">S/ 0.00</strong></div>
+            <div><span>ESTADO</span><strong id="featured-stock-label">DISPONIBLE</strong></div>
+          </div>
+          <button class="button button-primary button-wide" id="featured-add" type="button">AGREGAR AL CART</button>
         </div>
+      </div>
     </section>
-    <!-- Sección de Catálogo / Archivo -->
-    <section class="catalog-section" id="catalog">
-        <h2 class="catalog-title">ARCHIVO / <span>STOCK</span></h2>
-        <div class="catalog-grid" id="catalog-grid">
-            <!-- Los productos se inyectarán automáticamente vía JavaScript -->
-        </div>
-    </section>
-    <!-- Pie de página -->
-    <footer class="footer">
-        <p>© 2026 RAW CULT — HECHO EN PERÚ</p>
-        <p class="footer-note">DROPS LIMITADOS · SIN RESTOCK · CALIDAD REACTIVA</p>
-    </footer>
 
-    <!-- Conectar con el archivo JavaScript -->
-    <script src="script.js?v=2"></script>
+    <section class="shop-section shell" id="shop" aria-labelledby="shop-title">
+      <div class="section-heading section-heading-inline">
+        <div>
+          <p class="eyebrow">02 / SHOP</p>
+          <h2 id="shop-title">THE DROP STORE</h2>
+        </div>
+        <p class="section-note">Compra solo lo que forma parte de la edición. Los productos publicados serán los productos reales disponibles para el drop.</p>
+      </div>
+
+      <div class="category-strip" aria-label="Categorías">
+        <button class="category-chip is-active" type="button" data-category="all">ALL</button>
+        <button class="category-chip" type="button" data-category="wear">WEAR</button>
+        <button class="category-chip" type="button" data-category="objects">OBJECTS</button>
+        <button class="category-chip" type="button" data-category="limited">LIMITED</button>
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+      <p class="shop-empty" id="shop-empty" hidden>No hay productos publicados en esta categoría todavía.</p>
+    </section>
+
+    <section class="manifesto-section" id="about" aria-labelledby="about-title">
+      <div class="shell manifesto-grid">
+        <div>
+          <p class="eyebrow">03 / ABOUT</p>
+          <h2 id="about-title">NOT MERCH.<br /><span>A CULTURE.</span></h2>
+        </div>
+        <div class="manifesto-copy">
+          <p>RAW CULT nace para convertir referencias, obsesiones y símbolos en objetos que se sienten propios.</p>
+          <p>No perseguimos volumen. Construimos drops con una identidad clara, visuales fuertes y piezas que merecen quedarse en tu archivo.</p>
+          <p class="manifesto-signature">RAW CULT — UNFILTERED BY DESIGN.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="archive-section shell" id="archive" aria-labelledby="archive-title">
+      <div class="section-heading">
+        <p class="eyebrow">04 / ARCHIVE</p>
+        <h2 id="archive-title">KEEP THE RECORD.</h2>
+        <p>Los drops que terminan no desaparecen. Pasan al archivo.</p>
+      </div>
+      <div class="archive-card">
+        <div>
+          <span class="archive-number">001</span>
+          <span class="archive-label">ETERNAL</span>
+        </div>
+        <span class="archive-status" id="archive-status">UPCOMING</span>
+      </div>
+    </section>
+
+    <section class="membership-section shell" aria-labelledby="membership-title">
+      <div class="membership-box">
+        <p class="eyebrow">05 / THE CULT</p>
+        <h2 id="membership-title">EARLY ACCESS.</h2>
+        <p>Recibe avisos antes de cada drop y futuras piezas limitadas.</p>
+        <form class="membership-form" id="membership-form">
+          <label class="sr-only" for="membership-email">Correo electrónico</label>
+          <input id="membership-email" name="email" type="email" autocomplete="email" placeholder="tu@email.com" required />
+          <button class="button button-primary" type="submit">JOIN THE CULT</button>
+        </form>
+        <small id="membership-message" role="status"></small>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div>
+      <a class="brand-mark" href="#top">RAW<span>CULT</span></a>
+      <p>LIMITED DROPS / MADE IN PERÚ</p>
+    </div>
+    <div class="footer-links">
+      <a id="instagram-link" href="#" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
+      <a id="tiktok-link" href="#" target="_blank" rel="noopener noreferrer">TIKTOK</a>
+    </div>
+    <p class="copyright">© <span id="current-year">2026</span> RAW CULT</p>
+  </footer>
+
+  <aside class="cart-panel" id="cart-panel" aria-hidden="true" aria-labelledby="cart-title">
+    <div class="cart-header">
+      <div>
+        <p class="eyebrow">YOUR SELECTION</p>
+        <h2 id="cart-title">CART</h2>
+      </div>
+      <button class="icon-button" id="cart-close" type="button" aria-label="Cerrar carrito">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-empty" id="cart-empty">Tu selección está vacía.</div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>TOTAL</span><strong id="cart-total">S/ 0.00</strong></div>
+      <button class="button button-primary button-wide" id="checkout-button" type="button">SOLICITAR PEDIDO</button>
+      <p class="cart-note">En V1 el pedido se envía como solicitud. Integraremos checkout automático en la siguiente fase.</p>
+    </div>
+  </aside>
+  <div class="cart-backdrop" id="cart-backdrop" hidden></div>
+
+  <script src="config.js"></script>
+  <script src="products.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
