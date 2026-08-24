@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAW CULT — Drops Limitados</title>
+    <meta name="description" content="Raw Cult: streetwear para apasionados del anime, rock y fitness. Drops limitados, calidad algodón reactivo." />
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="msapplication-TileColor" content="#0a0a0a">
+    <meta name="theme-color" content="#0a0a0a">
+    <!-- Tipografías de Google (gratuitas) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Conectar con el archivo de estilos -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- Barra de navegación superior -->
+    <header class="nav">
+        <div class="logo">RAW<span>CULT</span></div>
+        <nav class="social-links">
+            <a href="#" target="_blank" rel="noopener" data-social="instagram" aria-label="Instagram">IG</a>
+            <a href="#" target="_blank" rel="noopener" data-social="tiktok" aria-label="TikTok">TT</a>
+        </nav>
+    </header>
+
+    <!-- Sección principal con countdown -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">DROP<br><span>001</span></h1>
+            <p class="hero-subtitle" id="drop-name">CARGANDO...</p>
+
+            <div class="countdown" id="countdown">
+                <div class="count-unit">
+                    <span class="count-number" id="days">00</span>
+                    <span class="count-label">DÍAS</span>
+                </div>
+                <div class="count-unit">
+                    <span class="count-number" id="hours">00</span>
+                    <span class="count-label">HRS</span>
+                </div>
+                <div class="count-unit">
+                    <span class="count-number" id="minutes">00</span>
+                    <span class="count-label">MIN</span>
+                </div>
+                <div class="count-unit">
+                    <span class="count-number" id="seconds">00</span>
+                    <span class="count-label">SEG</span>
+                </div>
+            </div>
+
+            <a href="#" class="cta-button" id="cta-link" target="_blank" rel="noopener">AVISARME EN INSTAGRAM</a>
+        </div>
+    </section>
+
+    <!-- Sección del pedestal con prenda destacada -->
+    <section class="pedestal-section">
+        <div class="pedestal-bg">
+            <video id="bg-video" autoplay muted loop playsinline preload="metadata"></video>
+            <div class="video-overlay"></div>
+        </div>
+
+        <div class="pedestal-content">
+            <h2 class="pedestal-title">MÁS<br>DESEADA</h2>
+            <div class="pedestal-product">
+                <img src="images/drop001-tee.png" alt="Prenda destacada del drop" id="product-img" loading="lazy" />
+                <div class="pedestal-base"></div>
+            </div>
+            <p class="pedestal-text">Solo quedan <span id="stock-left">--</span> unidades del drop anterior.</p>
+        </div>
+    </section>
+    <!-- Sección de Catálogo / Archivo -->
+    <section class="catalog-section" id="catalog">
+        <h2 class="catalog-title">ARCHIVO / <span>STOCK</span></h2>
+        <div class="catalog-grid" id="catalog-grid">
+            <!-- Los productos se inyectarán automáticamente vía JavaScript -->
+        </div>
+    </section>
+    <!-- Pie de página -->
+    <footer class="footer">
+        <p>© 2026 RAW CULT — HECHO EN PERÚ</p>
+        <p class="footer-note">DROPS LIMITADOS · SIN RESTOCK · CALIDAD REACTIVA</p>
+    </footer>
+
+    <!-- Conectar con el archivo JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
