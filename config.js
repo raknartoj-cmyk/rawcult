@@ -7,7 +7,7 @@ window.RAWCULT_CONFIG = Object.freeze({
   social: Object.freeze({
     instagram: 'https://instagram.com/rawcult.pe',
     tiktok: 'https://tiktok.com/@rawcult.pe',
-    whatsapp: ''
+    whatsapp: '51977512812'
   }),
   drop: Object.freeze({
     number: '001',
@@ -16,7 +16,7 @@ window.RAWCULT_CONFIG = Object.freeze({
     limited: true
   }),
   order: Object.freeze({
-    whatsapp: '',
+    whatsapp: '51977512812',
     mode: 'request'
   })
 });
