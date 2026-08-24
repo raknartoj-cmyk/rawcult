@@ -1,12 +1,11 @@
 /* ================================================================
    RAW CULT — ARCHIVO DE CONFIGURACIÓN
    ⚠️ SOLO EDITA LA SECCIÓN "CONFIG" DE ABAJO ⚠️
-   El resto del código funciona automáticamente.
    ================================================================ */
 
 const CONFIG = {
   // ============================================
-  // REDES SOCIALES (cambia las URLs por las tuyas)
+  // REDES SOCIALES
   // ============================================
   social: {
     instagram: "https://instagram.com/rawcult.pe",
@@ -23,10 +22,7 @@ const CONFIG = {
   
   // ============================================
   // DROPS PROGRAMADOS
-  // Para agregar un nuevo drop, copia y pega un bloque
-  // completo y cambia la fecha y el nombre.
-  // Formato fecha: "AÑO-MES-DÍAThora:MINUTO:SEGUNDO-05:00"
-  // (el -05:00 es la zona horaria de Perú)
+  // Formato: "AÑO-MES-DÍATHora:MINUTO:SEGUNDO-05:00"
   // ============================================
   drops: [
     {
@@ -40,305 +36,204 @@ const CONFIG = {
   // SECCIÓN PEDESTAL (PRENDA DESTACADA)
   // ============================================
   pedestal: {
-    // Video de fondo (MP4 corto, 5-10 segundos)
     videoUrl: "https://tu-cdn.com/pelea-urbana.mp4",
-    
-    // Imagen de la prenda (PNG con fondo transparente)
     productImage: "images/drop001-tee.png",
-    
-    // Stock restante (número)
     stockRemaining: 47
-  }
-};
-
-// ============================================
+  },
+  
+  // ============================================
   // CATÁLOGO DE PRODUCTOS EN STOCK
+  // ✅ ESTÁ DENTRO DE CONFIG AHORA
   // ============================================
   catalog: [
     {
       name: "ETERNAL SKULL TEE",
-      image: "images/drop001-tee.png", // Asegúrate de que el nombre sea correcto
+      image: "images/drop001-tee.png",
       price: "S/ 79.00",
-      oldPrice: "S/ 99.00", // Si no hay oferta, déjalo vacío: ""
-      isSale: true, // Pon true si está en oferta, false si es precio normal
-      link: "https://instagram.com/rawcult.pe" // Link donde compran (IG, WhatsApp, etc)
+      oldPrice: "S/ 99.00",
+      isSale: true,
+      link: "https://instagram.com/rawcult.pe"
     }
-    // Puedes copiar y pegar el bloque de arriba para agregar más productos
+    // Copia y pega para agregar más productos
   ]
 };
+
 /* ================================================================
    ⚠️ NO TOCAR NADA DE AQUÍ PARA ABAJO ⚠️
-   Todo funciona automáticamente.
    ================================================================ */
 
-// Aplicar links de redes sociales
-document.querySelectorAll('[data-social]').forEach(element => {
-  const platform = element.getAttribute('data-social');
-  if (CONFIG.social[platform]) {
-    element.href = CONFIG.social[platform];
-  }
-});
-
-// Aplicar configuración del botón principal
-const ctaButton = document.getElementById('cta-link');
-ctaButton.textContent = CONFIG.cta.text;
-ctaButton.href = CONFIG.cta.link;
-
-// Aplicar configuración del pedestal
-document.getElementById('bg-video').src = CONFIG.pedestal.videoUrl;
-document.getElementById('product-img').src = CONFIG.pedestal.productImage;
-document.getElementById('stock-left').textContent = CONFIG.pedestal.stockRemaining;
-
-// ============================================
-// SISTEMA DE COUNTDOWN AUTOMÁTICO
-// ============================================
-function getNextDrop() {
-  const now = new Date();
-  const upcomingDrops = CONFIG.drops
-    .filter(drop => drop.status === "upcoming" && new Date(drop.date) > now)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+// Esperar a que el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
   
-  return upcomingDrops[0] || null;
-}
-
-function updateCountdown() {
-  const drop = getNextDrop();
-  const nameElement = document.getElementById('drop-name');
-  const ctaElement = document.getElementById('cta-link');
-  
-  // Si no hay drops próximos
-  if (!drop) {
-    nameElement.textContent = "PRÓXIMO DROP EN PREPARACIÓN";
-    document.getElementById('countdown').style.display = 'none';
-    return;
-  }
-  
-  nameElement.textContent = drop.name;
-  
-  // Calcular tiempo restante
-  const targetTime = new Date(drop.date).getTime();
-  const currentTime = new Date().getTime();
-  const timeDifference = targetTime - currentTime;
-  
-  // Si el countdown llegó a cero
-  if (timeDifference <= 0) {
-    nameElement.textContent = "¡DROP DISPONIBLE AHORA!";
-    ctaElement.textContent = "COMPRAR AHORA";
-    ctaElement.href = CONFIG.social.instagram;
-    return;
-  }
-  
-  // Calcular días, horas, minutos y segundos
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-  
-  // Mostrar en la página
-  document.getElementById('days').textContent = String(days).padStart(2, '0');
-  document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-  document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-  document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-}
-
-// Iniciar countdown y actualizar cada segundo
-updateCountdown();
-setInterval(updateCountdown, 1000);
-// ============================================
-// SISTEMA DE CATÁLOGO AUTOMÁTICO
-// ============================================
-function renderCatalog() {
-  const grid = document.getElementById('catalog-grid');
-  if (!grid || !CONFIG.catalog) return;
-  
-  grid.innerHTML = CONFIG.catalog.map(product => `
-    <a href="${product.link}" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
-      <div class="product-card">
-        ${product.isSale ? '<div class="product-badge">OFERTA</div>' : ''}
-        <img src="${product.image}" alt="${product.name}" class="product-img" loading="lazy">
-        <div class="product-info">
-          <h3>${product.name}</h3>
-          <div class="product-price">
-            <span class="price-current">${product.price}</span>
-            ${product.oldPrice ? `<span class="price-old">${product.oldPrice}</span>` : ''}
-          </div>
-        </div>
-      </div>
-    </a>
-  `).join('');
-}
-
-// Iniciar catálogo
-renderCatalog();
-/* ================================================================
-   RAW CULT — ARCHIVO DE CONFIGURACIÓN
-   ⚠️ SOLO EDITA LA SECCIÓN "CONFIG" DE ABAJO ⚠️
-   El resto del código funciona automáticamente.
-   ================================================================ */
-
-const CONFIG = {
-  // ============================================
-  // REDES SOCIALES (cambia las URLs por las tuyas)
-  // ============================================
-  social: {
-    instagram: "https://instagram.com/rawcult.pe",
-    tiktok: "https://tiktok.com/@rawcult.pe"
-  },
+  console.log('RAW CULT — Iniciando...');
+  console.log('Config cargada:', CONFIG);
   
   // ============================================
-  // BOTÓN PRINCIPAL
+  // APLICAR LINKS DE REDES SOCIALES
   // ============================================
-  cta: {
-    text: "AVISARME EN INSTAGRAM",
-    link: "https://instagram.com/rawcult.pe"
-  },
-  
-  // ============================================
-  // DROPS PROGRAMADOS
-  // Para agregar un nuevo drop, copia y pega un bloque
-  // completo y cambia la fecha y el nombre.
-  // Formato fecha: "AÑO-MES-DÍAThora:MINUTO:SEGUNDO-05:00"
-  // (el -05:00 es la zona horaria de Perú)
-  // ============================================
-  drops: [
-    {
-      name: "DROP 001 — ETERNAL",
-      date: "2026-09-15T20:00:00-05:00",
-      status: "upcoming"
+  document.querySelectorAll('[data-social]').forEach(function(element) {
+    var platform = element.getAttribute('data-social');
+    if (CONFIG.social[platform]) {
+      element.href = CONFIG.social[platform];
+      console.log('Social link aplicado:', platform);
     }
-  ],
-  
-  // ============================================
-  // SECCIÓN PEDESTAL (PRENDA DESTACADA)
-  // ============================================
-  pedestal: {
-    // Video de fondo (MP4 corto, 5-10 segundos)
-    videoUrl: "https://tu-cdn.com/pelea-urbana.mp4",
-    
-    // Imagen de la prenda (PNG con fondo transparente)
-    productImage: "images/drop001-tee.png",
-    
-    // Stock restante (número)
-    stockRemaining: 47
-  }
-};
+  });
 
-// ============================================
-  // CATÁLOGO DE PRODUCTOS EN STOCK
   // ============================================
-  catalog: [
-    {
-      name: "ETERNAL SKULL TEE",
-      image: "images/drop001-tee.png", // Asegúrate de que el nombre sea correcto
-      price: "S/ 79.00",
-      oldPrice: "S/ 99.00", // Si no hay oferta, déjalo vacío: ""
-      isSale: true, // Pon true si está en oferta, false si es precio normal
-      link: "https://instagram.com/rawcult.pe" // Link donde compran (IG, WhatsApp, etc)
+  // APLICAR BOTÓN PRINCIPAL
+  // ============================================
+  var ctaButton = document.getElementById('cta-link');
+  if (ctaButton) {
+    ctaButton.textContent = CONFIG.cta.text;
+    ctaButton.href = CONFIG.cta.link;
+    console.log('CTA configurado');
+  } else {
+    console.error('❌ No se encontró #cta-link');
+  }
+
+  // ============================================
+  // APLICAR PEDESTAL Y STOCK
+  // ============================================
+  var bgVideo = document.getElementById('bg-video');
+  var productImg = document.getElementById('product-img');
+  var stockLeft = document.getElementById('stock-left');
+  
+  if (bgVideo) {
+    bgVideo.src = CONFIG.pedestal.videoUrl;
+    console.log('Video de fondo configurado');
+  } else {
+    console.error('❌ No se encontró #bg-video');
+  }
+  
+  if (productImg) {
+    productImg.src = CONFIG.pedestal.productImage;
+    console.log('Imagen de producto configurada');
+  } else {
+    console.error('❌ No se encontró #product-img');
+  }
+  
+  if (stockLeft) {
+    stockLeft.textContent = CONFIG.pedestal.stockRemaining;
+    console.log('Stock configurado:', CONFIG.pedestal.stockRemaining);
+  } else {
+    console.error('❌ No se encontró #stock-left');
+  }
+
+  // ============================================
+  // SISTEMA DE COUNTDOWN
+  // ============================================
+  function getNextDrop() {
+    var now = new Date();
+    var upcomingDrops = CONFIG.drops.filter(function(drop) {
+      return drop.status === "upcoming" && new Date(drop.date) > now;
+    });
+    upcomingDrops.sort(function(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    });
+    return upcomingDrops[0] || null;
+  }
+
+  function updateCountdown() {
+    var drop = getNextDrop();
+    var nameElement = document.getElementById('drop-name');
+    var ctaElement = document.getElementById('cta-link');
+    var countdownElement = document.getElementById('countdown');
+    
+    if (!nameElement) {
+      console.error('❌ No se encontró #drop-name');
+      return;
     }
-    // Puedes copiar y pegar el bloque de arriba para agregar más productos
-  ]
-};
-/* ================================================================
-   ⚠️ NO TOCAR NADA DE AQUÍ PARA ABAJO ⚠️
-   Todo funciona automáticamente.
-   ================================================================ */
-
-// Aplicar links de redes sociales
-document.querySelectorAll('[data-social]').forEach(element => {
-  const platform = element.getAttribute('data-social');
-  if (CONFIG.social[platform]) {
-    element.href = CONFIG.social[platform];
+    
+    if (!drop) {
+      nameElement.textContent = "PRÓXIMO DROP EN PREPARACIÓN";
+      if (countdownElement) countdownElement.style.display = 'none';
+      return;
+    }
+    
+    nameElement.textContent = drop.name;
+    
+    var targetTime = new Date(drop.date).getTime();
+    var currentTime = new Date().getTime();
+    var timeDifference = targetTime - currentTime;
+    
+    if (timeDifference <= 0) {
+      nameElement.textContent = "¡DROP DISPONIBLE AHORA!";
+      if (ctaElement) {
+        ctaElement.textContent = "COMPRAR AHORA";
+        ctaElement.href = CONFIG.social.instagram;
+      }
+      if (countdownElement) countdownElement.style.display = 'none';
+      return;
+    }
+    
+    if (countdownElement) countdownElement.style.display = 'flex';
+    
+    var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    
+    var daysEl = document.getElementById('days');
+    var hoursEl = document.getElementById('hours');
+    var minutesEl = document.getElementById('minutes');
+    var secondsEl = document.getElementById('seconds');
+    
+    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
   }
+
+  // Iniciar countdown
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  console.log('Countdown iniciado');
+
+  // ============================================
+  // SISTEMA DE CATÁLOGO
+  // ============================================
+  function renderCatalog() {
+    var grid = document.getElementById('catalog-grid');
+    
+    if (!grid) {
+      console.error('❌ No se encontró #catalog-grid');
+      return;
+    }
+    
+    if (!CONFIG.catalog || CONFIG.catalog.length === 0) {
+      console.warn('⚠️ No hay productos en el catálogo');
+      grid.innerHTML = '<p style="text-align:center;color:#666;">Próximamente...</p>';
+      return;
+    }
+    
+    console.log('Renderizando', CONFIG.catalog.length, 'productos');
+    
+    var html = '';
+    for (var i = 0; i < CONFIG.catalog.length; i++) {
+      var product = CONFIG.catalog[i];
+      var badgeHtml = product.isSale ? '<div class="product-badge">OFERTA</div>' : '';
+      var oldPriceHtml = product.oldPrice ? '<span class="price-old">' + product.oldPrice + '</span>' : '';
+      
+      html += '<a href="' + product.link + '" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">';
+      html += '  <div class="product-card">';
+      html += '    ' + badgeHtml;
+      html += '    <img src="' + product.image + '" alt="' + product.name + '" class="product-img" loading="lazy">';
+      html += '    <div class="product-info">';
+      html += '      <h3>' + product.name + '</h3>';
+      html += '      <div class="product-price">';
+      html += '        <span class="price-current">' + product.price + '</span>';
+      html += '        ' + oldPriceHtml;
+      html += '      </div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '</a>';
+    }
+    
+    grid.innerHTML = html;
+    console.log('✅ Catálogo renderizado correctamente');
+  }
+
+  renderCatalog();
+  
+  console.log('✅ RAW CULT — Todo cargado correctamente');
 });
-
-// Aplicar configuración del botón principal
-const ctaButton = document.getElementById('cta-link');
-ctaButton.textContent = CONFIG.cta.text;
-ctaButton.href = CONFIG.cta.link;
-
-// Aplicar configuración del pedestal
-document.getElementById('bg-video').src = CONFIG.pedestal.videoUrl;
-document.getElementById('product-img').src = CONFIG.pedestal.productImage;
-document.getElementById('stock-left').textContent = CONFIG.pedestal.stockRemaining;
-
-// ============================================
-// SISTEMA DE COUNTDOWN AUTOMÁTICO
-// ============================================
-function getNextDrop() {
-  const now = new Date();
-  const upcomingDrops = CONFIG.drops
-    .filter(drop => drop.status === "upcoming" && new Date(drop.date) > now)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-  
-  return upcomingDrops[0] || null;
-}
-
-function updateCountdown() {
-  const drop = getNextDrop();
-  const nameElement = document.getElementById('drop-name');
-  const ctaElement = document.getElementById('cta-link');
-  
-  // Si no hay drops próximos
-  if (!drop) {
-    nameElement.textContent = "PRÓXIMO DROP EN PREPARACIÓN";
-    document.getElementById('countdown').style.display = 'none';
-    return;
-  }
-  
-  nameElement.textContent = drop.name;
-  
-  // Calcular tiempo restante
-  const targetTime = new Date(drop.date).getTime();
-  const currentTime = new Date().getTime();
-  const timeDifference = targetTime - currentTime;
-  
-  // Si el countdown llegó a cero
-  if (timeDifference <= 0) {
-    nameElement.textContent = "¡DROP DISPONIBLE AHORA!";
-    ctaElement.textContent = "COMPRAR AHORA";
-    ctaElement.href = CONFIG.social.instagram;
-    return;
-  }
-  
-  // Calcular días, horas, minutos y segundos
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-  
-  // Mostrar en la página
-  document.getElementById('days').textContent = String(days).padStart(2, '0');
-  document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-  document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-  document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-}
-
-// Iniciar countdown y actualizar cada segundo
-updateCountdown();
-setInterval(updateCountdown, 1000);
-// ============================================
-// SISTEMA DE CATÁLOGO AUTOMÁTICO
-// ============================================
-function renderCatalog() {
-  const grid = document.getElementById('catalog-grid');
-  if (!grid || !CONFIG.catalog) return;
-  
-  grid.innerHTML = CONFIG.catalog.map(product => `
-    <a href="${product.link}" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">
-      <div class="product-card">
-        ${product.isSale ? '<div class="product-badge">OFERTA</div>' : ''}
-        <img src="${product.image}" alt="${product.name}" class="product-img" loading="lazy">
-        <div class="product-info">
-          <h3>${product.name}</h3>
-          <div class="product-price">
-            <span class="price-current">${product.price}</span>
-            ${product.oldPrice ? `<span class="price-old">${product.oldPrice}</span>` : ''}
-          </div>
-        </div>
-      </div>
-    </a>
-  `).join('');
-}
-
-// Iniciar catálogo
-renderCatalog();
