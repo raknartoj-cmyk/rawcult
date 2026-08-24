@@ -1,6 +1,6 @@
 /* RAW CULT — configuración global V1.1 */
 
-const RAWCULT_CONFIG = Object.freeze({
+window.RAWCULT_CONFIG = Object.freeze({
   brand: 'RAW CULT',
   currency: 'PEN',
   locale: 'es-PE',
