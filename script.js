@@ -1,239 +1,96 @@
-/* ================================================================
-   RAW CULT — ARCHIVO DE CONFIGURACIÓN
-   ⚠️ SOLO EDITA LA SECCIÓN "CONFIG" DE ABAJO ⚠️
-   ================================================================ */
+/* RAW CULT — Brand Landing + Drop Store V1.2 */
+(() => {
+  'use strict';
 
-const CONFIG = {
-  // ============================================
-  // REDES SOCIALES
-  // ============================================
-  social: {
-    instagram: "https://instagram.com/rawcult.pe",
-    tiktok: "https://tiktok.com/@rawcult.pe"
-  },
-  
-  // ============================================
-  // BOTÓN PRINCIPAL
-  // ============================================
-  cta: {
-    text: "AVISARME EN INSTAGRAM",
-    link: "https://instagram.com/rawcult.pe"
-  },
-  
-  // ============================================
-  // DROPS PROGRAMADOS
-  // Formato: "AÑO-MES-DÍATHora:MINUTO:SEGUNDO-05:00"
-  // ============================================
-  drops: [
-    {
-      name: "DROP 001 — ETERNAL",
-      date: "2026-09-15T20:00:00-05:00",
-      status: "upcoming"
-    }
-  ],
-  
-  // ============================================
-  // SECCIÓN PEDESTAL (PRENDA DESTACADA)
-  // ============================================
-  pedestal: {
-    videoUrl: "https://tu-cdn.com/pelea-urbana.mp4",
-    productImage: "images/drop001-tee.png",
-    stockRemaining: 47
-  },
-  
-  // ============================================
-  // CATÁLOGO DE PRODUCTOS EN STOCK
-  // ✅ ESTÁ DENTRO DE CONFIG AHORA
-  // ============================================
-  catalog: [
-    {
-      name: "ETERNAL SKULL TEE",
-      image: "images/drop001-tee.png",
-      price: "S/ 79.00",
-      oldPrice: "S/ 99.00",
-      isSale: true,
-      link: "https://instagram.com/rawcult.pe"
-    }
-    // Copia y pega para agregar más productos
-  ]
-};
+  const STORAGE_KEY = 'rawcult-cart-v2';
+  const config = window.RAWCULT_CONFIG;
+  const products = window.RAWCULT_PRODUCTS;
+  if (!config || !Array.isArray(products)) return;
 
-/* ================================================================
-   ⚠️ NO TOCAR NADA DE AQUÍ PARA ABAJO ⚠️
-   ================================================================ */
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
+  const money = (value) => new Intl.NumberFormat(config.locale, { style: 'currency', currency: config.currency, minimumFractionDigits: 2 }).format(value).replace('PEN', 'S/');
+  const state = { category: 'all', cart: loadCart() };
 
-// Esperar a que el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-  
-  console.log('RAW CULT — Iniciando...');
-  console.log('Config cargada:', CONFIG);
-  
-  // ============================================
-  // APLICAR LINKS DE REDES SOCIALES
-  // ============================================
-  document.querySelectorAll('[data-social]').forEach(function(element) {
-    var platform = element.getAttribute('data-social');
-    if (CONFIG.social[platform]) {
-      element.href = CONFIG.social[platform];
-      console.log('Social link aplicado:', platform);
-    }
-  });
+  function getProduct(id) { return products.find((p) => p.id === id); }
+  function loadCart() {
+    try { const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); return Array.isArray(value) ? value : []; }
+    catch { return []; }
+  }
+  function saveCart() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.cart)); }
+  function escapeHtml(value) { return String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
+  function publishedProducts() { return products.filter((p) => p.published !== false); }
 
-  // ============================================
-  // APLICAR BOTÓN PRINCIPAL
-  // ============================================
-  var ctaButton = document.getElementById('cta-link');
-  if (ctaButton) {
-    ctaButton.textContent = CONFIG.cta.text;
-    ctaButton.href = CONFIG.cta.link;
-    console.log('CTA configurado');
-  } else {
-    console.error('❌ No se encontró #cta-link');
+  function scrollToShop() { $('#shop')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  function scrollToFeatured() { $('#drop')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+  function renderCatalog() {
+    const grid = $('#product-grid'); const empty = $('#shop-empty'); if (!grid || !empty) return;
+    const filtered = publishedProducts().filter((p) => state.category === 'all' ? true : state.category === 'limited' ? p.tags.includes('limited') : p.category === state.category);
+    grid.innerHTML = filtered.map((p) => `<article class="product-card"><div class="product-media">${p.tags.includes('limited') ? '<span class="product-badge">LIMITED</span>' : ''}<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.alt)}" loading="lazy"></div><div class="product-info"><h3>${escapeHtml(p.name)}</h3><p class="product-description">${escapeHtml(p.description)}</p><div class="product-bottom"><span class="product-price">${money(p.price)}</span><button class="product-add" type="button" data-add-product="${escapeHtml(p.id)}" ${p.available ? '' : 'disabled'}>${p.available ? 'ADD TO CART' : 'PRÓXIMAMENTE'}</button></div></div></article>`).join('');
+    empty.hidden = filtered.length > 0;
   }
 
-  // ============================================
-  // APLICAR PEDESTAL Y STOCK
-  // ============================================
-  var bgVideo = document.getElementById('bg-video');
-  var productImg = document.getElementById('product-img');
-  var stockLeft = document.getElementById('stock-left');
-  
-  if (bgVideo) {
-    bgVideo.src = CONFIG.pedestal.videoUrl;
-    console.log('Video de fondo configurado');
-  } else {
-    console.error('❌ No se encontró #bg-video');
-  }
-  
-  if (productImg) {
-    productImg.src = CONFIG.pedestal.productImage;
-    console.log('Imagen de producto configurada');
-  } else {
-    console.error('❌ No se encontró #product-img');
-  }
-  
-  if (stockLeft) {
-    stockLeft.textContent = CONFIG.pedestal.stockRemaining;
-    console.log('Stock configurado:', CONFIG.pedestal.stockRemaining);
-  } else {
-    console.error('❌ No se encontró #stock-left');
+  function renderFeatured() {
+    const p = publishedProducts().find((x) => x.featured) || publishedProducts()[0]; if (!p) return;
+    $('#featured-image').src = p.image; $('#featured-image').alt = p.alt; $('#featured-name').textContent = p.name; $('#featured-description').textContent = p.description; $('#featured-price').textContent = money(p.price); $('#featured-stock-label').textContent = p.available ? 'DISPONIBLE' : 'PRÓXIMAMENTE'; $('#featured-add').disabled = !p.available; $('#featured-add').textContent = p.available ? 'AGREGAR AL CART' : 'PRÓXIMAMENTE'; $('#featured-add').dataset.productId = p.id;
   }
 
-  // ============================================
-  // SISTEMA DE COUNTDOWN
-  // ============================================
-  function getNextDrop() {
-    var now = new Date();
-    var upcomingDrops = CONFIG.drops.filter(function(drop) {
-      return drop.status === "upcoming" && new Date(drop.date) > now;
-    });
-    upcomingDrops.sort(function(a, b) {
-      return new Date(a.date) - new Date(b.date);
-    });
-    return upcomingDrops[0] || null;
+  function addToCart(productId, variant = null) {
+    const p = getProduct(productId); if (!p || !p.available) return;
+    if (p.options?.length && !variant) { openProductOptions(p); return; }
+    const existing = state.cart.find((i) => i.productId === productId && i.variant === variant);
+    if (existing) existing.quantity += 1; else state.cart.push({ productId, variant, quantity: 1 });
+    saveCart(); renderCart(); openCart(); closeProductOptions();
   }
+  function removeFromCart(productId, variant) { state.cart = state.cart.filter((i) => !(i.productId === productId && i.variant === variant)); saveCart(); renderCart(); }
+  function changeQuantity(productId, variant, delta) { const item = state.cart.find((i) => i.productId === productId && i.variant === variant); if (!item) return; item.quantity += delta; if (item.quantity <= 0) removeFromCart(productId, variant); else { saveCart(); renderCart(); } }
+
+  function renderCart() {
+    const container = $('#cart-items'), empty = $('#cart-empty'), count = $('#cart-count'), totalEl = $('#cart-total'); if (!container || !empty || !count || !totalEl) return;
+    const valid = state.cart.map((i) => ({ ...i, product: getProduct(i.productId) })).filter((i) => i.product);
+    count.textContent = String(valid.reduce((s, i) => s + i.quantity, 0)); totalEl.textContent = money(valid.reduce((s, i) => s + i.product.price * i.quantity, 0)); empty.hidden = valid.length > 0;
+    container.innerHTML = valid.map(({ product, variant, quantity }) => `<div class="cart-line"><img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.alt)}"><div><h3>${escapeHtml(product.name)}</h3><p>${variant ? `TALLA ${escapeHtml(variant)} · ` : ''}${money(product.price)}</p><div class="quantity-controls"><button type="button" data-qty="-1" data-product="${product.id}" data-variant="${variant || ''}">−</button><span>${quantity}</span><button type="button" data-qty="1" data-product="${product.id}" data-variant="${variant || ''}">+</button></div></div><button class="cart-remove" type="button" data-remove-product="${product.id}" data-variant="${variant || ''}">REMOVE</button></div>`).join('');
+  }
+
+  function openCart() { $('#cart-panel')?.classList.add('is-open'); $('#cart-panel')?.setAttribute('aria-hidden','false'); $('#cart-toggle')?.setAttribute('aria-expanded','true'); $('#cart-backdrop').hidden=false; document.body.classList.add('cart-open'); }
+  function closeCart() { $('#cart-panel')?.classList.remove('is-open'); $('#cart-panel')?.setAttribute('aria-hidden','true'); $('#cart-toggle')?.setAttribute('aria-expanded','false'); $('#cart-backdrop').hidden=true; document.body.classList.remove('cart-open'); }
+
+  function openProductOptions(product) {
+    const modal = $('#product-options-modal'); if (!modal) return addToCart(product.id, product.options?.[0] || null);
+    modal.querySelector('[data-modal-name]').textContent = product.name; modal.dataset.productId = product.id;
+    modal.querySelector('[data-size-list]').innerHTML = product.options.map((o) => `<button type="button" class="size-option" data-size="${escapeHtml(o)}">${escapeHtml(o)}</button>`).join(''); modal.hidden = false;
+  }
+  function closeProductOptions() { const m=$('#product-options-modal'); if(m) m.hidden=true; }
 
   function updateCountdown() {
-    var drop = getNextDrop();
-    var nameElement = document.getElementById('drop-name');
-    var ctaElement = document.getElementById('cta-link');
-    var countdownElement = document.getElementById('countdown');
-    
-    if (!nameElement) {
-      console.error('❌ No se encontró #drop-name');
-      return;
-    }
-    
-    if (!drop) {
-      nameElement.textContent = "PRÓXIMO DROP EN PREPARACIÓN";
-      if (countdownElement) countdownElement.style.display = 'none';
-      return;
-    }
-    
-    nameElement.textContent = drop.name;
-    
-    var targetTime = new Date(drop.date).getTime();
-    var currentTime = new Date().getTime();
-    var timeDifference = targetTime - currentTime;
-    
-    if (timeDifference <= 0) {
-      nameElement.textContent = "¡DROP DISPONIBLE AHORA!";
-      if (ctaElement) {
-        ctaElement.textContent = "COMPRAR AHORA";
-        ctaElement.href = CONFIG.social.instagram;
-      }
-      if (countdownElement) countdownElement.style.display = 'none';
-      return;
-    }
-    
-    if (countdownElement) countdownElement.style.display = 'flex';
-    
-    var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-    
-    var daysEl = document.getElementById('days');
-    var hoursEl = document.getElementById('hours');
-    var minutesEl = document.getElementById('minutes');
-    var secondsEl = document.getElementById('seconds');
-    
-    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
-    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+    const diff = new Date(config.drop.launchAt).getTime() - Date.now(); const status=$('#drop-status'), cta=$('#hero-cta'), archive=$('#archive-status');
+    if (diff <= 0) { ['days','hours','minutes','seconds'].forEach((id)=>$('#'+id).textContent='00'); status.textContent='DROP LIVE'; archive.textContent='LIVE'; if(cta) cta.textContent='COMPRAR DROP'; return; }
+    const s=Math.floor(diff/1000); $('#days').textContent=String(Math.floor(s/86400)).padStart(2,'0'); $('#hours').textContent=String(Math.floor((s%86400)/3600)).padStart(2,'0'); $('#minutes').textContent=String(Math.floor((s%3600)/60)).padStart(2,'0'); $('#seconds').textContent=String(s%60).padStart(2,'0'); status.textContent='DROP PROGRAMADO'; archive.textContent='UPCOMING';
   }
 
-  // Iniciar countdown
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-  console.log('Countdown iniciado');
-
-  // ============================================
-  // SISTEMA DE CATÁLOGO
-  // ============================================
-  function renderCatalog() {
-    var grid = document.getElementById('catalog-grid');
-    
-    if (!grid) {
-      console.error('❌ No se encontró #catalog-grid');
-      return;
-    }
-    
-    if (!CONFIG.catalog || CONFIG.catalog.length === 0) {
-      console.warn('⚠️ No hay productos en el catálogo');
-      grid.innerHTML = '<p style="text-align:center;color:#666;">Próximamente...</p>';
-      return;
-    }
-    
-    console.log('Renderizando', CONFIG.catalog.length, 'productos');
-    
-    var html = '';
-    for (var i = 0; i < CONFIG.catalog.length; i++) {
-      var product = CONFIG.catalog[i];
-      var badgeHtml = product.isSale ? '<div class="product-badge">OFERTA</div>' : '';
-      var oldPriceHtml = product.oldPrice ? '<span class="price-old">' + product.oldPrice + '</span>' : '';
-      
-      html += '<a href="' + product.link + '" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">';
-      html += '  <div class="product-card">';
-      html += '    ' + badgeHtml;
-      html += '    <img src="' + product.image + '" alt="' + product.name + '" class="product-img" loading="lazy">';
-      html += '    <div class="product-info">';
-      html += '      <h3>' + product.name + '</h3>';
-      html += '      <div class="product-price">';
-      html += '        <span class="price-current">' + product.price + '</span>';
-      html += '        ' + oldPriceHtml;
-      html += '      </div>';
-      html += '    </div>';
-      html += '  </div>';
-      html += '</a>';
-    }
-    
-    grid.innerHTML = html;
-    console.log('✅ Catálogo renderizado correctamente');
+  function setup() {
+    $('#instagram-link').href=config.social.instagram || '#'; $('#tiktok-link').href=config.social.tiktok || '#'; $('#current-year').textContent=new Date().getFullYear(); $('#hero-drop-name').textContent=config.drop.name;
+    $('#hero-cta')?.addEventListener('click', (event) => { event.preventDefault(); scrollToFeatured(); });
+    $('#featured-image')?.addEventListener('click', () => { const id=$('#featured-add')?.dataset.productId; if(id) addToCart(id); });
+    $$('[data-category]').forEach((b)=>b.addEventListener('click',()=>{state.category=b.dataset.category; $$('[data-category]').forEach(x=>x.classList.toggle('is-active',x===b)); renderCatalog();}));
+    $('#cart-toggle')?.addEventListener('click',openCart); $('#cart-close')?.addEventListener('click',closeCart); $('#cart-backdrop')?.addEventListener('click',closeCart); document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){closeCart();closeProductOptions();}});
+    document.addEventListener('click',(e)=>{ const add=e.target.closest('[data-add-product]'); if(add) addToCart(add.dataset.addProduct); const rem=e.target.closest('[data-remove-product]'); if(rem) removeFromCart(rem.dataset.removeProduct,rem.dataset.variant||null); const qty=e.target.closest('[data-qty]'); if(qty) changeQuantity(qty.dataset.product,qty.dataset.variant||null,Number(qty.dataset.qty)); const size=e.target.closest('[data-size]'); if(size){const m=$('#product-options-modal'); addToCart(m.dataset.productId,size.dataset.size);} });
+    $('#featured-add')?.addEventListener('click',()=>addToCart($('#featured-add').dataset.productId));
+    $('#product-options-close')?.addEventListener('click',closeProductOptions);
+    $('#checkout-button')?.addEventListener('click',()=>requestOrder());
+    $('#membership-form')?.addEventListener('submit',(e)=>{e.preventDefault(); const email=$('#membership-email')?.value.trim(); const msg=$('#membership-message'); if(!email)return; msg.textContent='Solicitud registrada localmente. Conecta un proveedor de email para activar Early Access.'; $('#membership-email').value='';});
+    updateCountdown(); setInterval(updateCountdown,1000);
   }
 
-  renderCatalog();
-  
-  console.log('✅ RAW CULT — Todo cargado correctamente');
-});
+  function requestOrder() {
+    const valid = state.cart.filter((i) => getProduct(i.productId));
+    if (!valid.length) { alert('Tu carrito está vacío.'); return; }
+    const items=valid.map(i=>{const p=getProduct(i.productId); return `${p.name}${i.variant?` — Talla ${i.variant}`:''} x${i.quantity}`;}).join('\n');
+    const total=valid.reduce((s,i)=>{const p=getProduct(i.productId); return s+p.price*i.quantity;},0);
+    const message=`RAW CULT — SOLICITUD DE PEDIDO\n\n${items}\n\nTOTAL: ${money(total)}\n\nHola, quiero comprar el Drop 001 ETERNAL.`;
+    if(config.order.whatsapp) window.location.href=`https://wa.me/${config.order.whatsapp}?text=${encodeURIComponent(message)}`;
+  }
+
+  setup(); renderFeatured(); renderCatalog(); renderCart();
+})();

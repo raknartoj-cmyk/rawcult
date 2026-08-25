@@ -1,19 +1,22 @@
 {
-  "name": "Raw Cult",
-  "short_name": "Raw Cult",
+  "name": "RAW CULT",
+  "short_name": "RAW CULT",
+  "description": "RAW CULT — limited drops and objects made in Perú.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "theme_color": "#0a0a0a",
-  "background_color": "#0a0a0a",
+  "theme_color": "#080808",
+  "background_color": "#080808",
   "display": "standalone"
 }
