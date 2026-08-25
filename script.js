@@ -1,4 +1,4 @@
-/* RAW CULT — Brand Landing + Drop Store V1.1 */
+/* RAW CULT — Brand Landing + Drop Store V1.2 */
 (() => {
   'use strict';
 
@@ -19,8 +19,10 @@
   }
   function saveCart() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.cart)); }
   function escapeHtml(value) { return String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
-
   function publishedProducts() { return products.filter((p) => p.published !== false); }
+
+  function scrollToShop() { $('#shop')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  function scrollToFeatured() { $('#drop')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
   function renderCatalog() {
     const grid = $('#product-grid'); const empty = $('#shop-empty'); if (!grid || !empty) return;
@@ -69,23 +71,25 @@
 
   function setup() {
     $('#instagram-link').href=config.social.instagram || '#'; $('#tiktok-link').href=config.social.tiktok || '#'; $('#current-year').textContent=new Date().getFullYear(); $('#hero-drop-name').textContent=config.drop.name;
+    $('#hero-cta')?.addEventListener('click', (event) => { event.preventDefault(); scrollToFeatured(); });
+    $('#featured-image')?.addEventListener('click', () => { const id=$('#featured-add')?.dataset.productId; if(id) addToCart(id); });
     $$('[data-category]').forEach((b)=>b.addEventListener('click',()=>{state.category=b.dataset.category; $$('[data-category]').forEach(x=>x.classList.toggle('is-active',x===b)); renderCatalog();}));
     $('#cart-toggle')?.addEventListener('click',openCart); $('#cart-close')?.addEventListener('click',closeCart); $('#cart-backdrop')?.addEventListener('click',closeCart); document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){closeCart();closeProductOptions();}});
     document.addEventListener('click',(e)=>{ const add=e.target.closest('[data-add-product]'); if(add) addToCart(add.dataset.addProduct); const rem=e.target.closest('[data-remove-product]'); if(rem) removeFromCart(rem.dataset.removeProduct,rem.dataset.variant||null); const qty=e.target.closest('[data-qty]'); if(qty) changeQuantity(qty.dataset.product,qty.dataset.variant||null,Number(qty.dataset.qty)); const size=e.target.closest('[data-size]'); if(size){const m=$('#product-options-modal'); addToCart(m.dataset.productId,size.dataset.size);} });
     $('#featured-add')?.addEventListener('click',()=>addToCart($('#featured-add').dataset.productId));
     $('#product-options-close')?.addEventListener('click',closeProductOptions);
     $('#checkout-button')?.addEventListener('click',()=>requestOrder());
-    $('#membership-form')?.addEventListener('submit',(e)=>{e.preventDefault(); const email=$('#membership-email')?.value.trim(); const msg=$('#membership-message'); if(!email)return; msg.textContent='Solicitud registrada localmente. Conecta un proveedor de email antes de producción.'; $('#membership-email').value='';});
+    $('#membership-form')?.addEventListener('submit',(e)=>{e.preventDefault(); const email=$('#membership-email')?.value.trim(); const msg=$('#membership-message'); if(!email)return; msg.textContent='Solicitud registrada localmente. Conecta un proveedor de email para activar Early Access.'; $('#membership-email').value='';});
     updateCountdown(); setInterval(updateCountdown,1000);
   }
 
   function requestOrder() {
-    if (!state.cart.length) { alert('Tu carrito está vacío.'); return; }
-    const items=state.cart.map(i=>{const p=getProduct(i.productId); return `${p.name}${i.variant?` (${i.variant})`:''} x${i.quantity}`;}).join('\n');
-    const total=state.cart.reduce((s,i)=>{const p=getProduct(i.productId); return s+p.price*i.quantity;},0);
-    const message=`RAW CULT — SOLICITUD DE PEDIDO\n\n${items}\n\nTOTAL: ${money(total)}`;
-    if(config.order.whatsapp){ window.open(`https://wa.me/${config.order.whatsapp}?text=${encodeURIComponent(message)}`,'_blank','noopener'); }
-    else alert(message + '\n\nConfigura config.order.whatsapp para activar pedidos por WhatsApp.');
+    const valid = state.cart.filter((i) => getProduct(i.productId));
+    if (!valid.length) { alert('Tu carrito está vacío.'); return; }
+    const items=valid.map(i=>{const p=getProduct(i.productId); return `${p.name}${i.variant?` — Talla ${i.variant}`:''} x${i.quantity}`;}).join('\n');
+    const total=valid.reduce((s,i)=>{const p=getProduct(i.productId); return s+p.price*i.quantity;},0);
+    const message=`RAW CULT — SOLICITUD DE PEDIDO\n\n${items}\n\nTOTAL: ${money(total)}\n\nHola, quiero comprar el Drop 001 ETERNAL.`;
+    if(config.order.whatsapp) window.location.href=`https://wa.me/${config.order.whatsapp}?text=${encodeURIComponent(message)}`;
   }
 
   setup(); renderFeatured(); renderCatalog(); renderCart();
